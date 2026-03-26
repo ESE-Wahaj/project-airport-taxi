@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
-const host = "http://localhost:8080";
+const host = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
 
 export const fetchAllCars  = async  () => {
