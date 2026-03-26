@@ -17,13 +17,13 @@ import { jwtDecode } from "jwt-decode";
   const navigate = useNavigate()
   const { logout } = useContext(AuthContext);
 
-  const token = Cookies.get('authToken'); 
-  
+  const token = Cookies.get('authToken');
+
   if (token) {
     try {
       const decodedToken = jwtDecode(token);
       var user_Id = decodedToken.id ;
-  
+
     } catch (error) {
       console.error("Invalid token", error);
     }
@@ -62,57 +62,241 @@ const viewQuote=()=>{
 }
 
   return (
-   
-    <div className='p-10  xl:p-20 xl:pr-40 md:p-8  md:max-w-7xl bg-white mx-auto mt-[-4rem]  rounded-xl'>
-        <h1 className='font-bold text-4xl '>TAXIGO</h1>
-        <h5 className='text-xl mt-2'>Profile</h5>
-        <h4 className='pt-4 font-semibold md:w-1/2 '>From here you can manage Bookings you've made or
-        Create new bookings or Change your account Information</h4>
-        <p className='pt-5 w- text-[#667085] pb-5 md:w-1/2'>Access your Rides history to see all your previous rides
-        and other ride details.</p>
-      
-        <button onClick={ridehistory} className="bg-[#FFCA09] text-black p-2 rounded  md:w-96  w-full font-semibold poppins flex  items-center justify-center">
-        Rides History <img src={bucket} className='mr-2 ml-3' />
-        </button>
-       
-        <h4 className='pt-5 font-semibold text-xl'>Manage Your Bookings </h4>
-        <p className='text-[#667085] pb-5 md:w-3/5'>You can make amendments to your bookings up until the 24 hours before your Journey is due to start. You can also downlload copies of receipts for previous bookings here.</p>
-        <div className='flex  md:flex-row md:gap-6 gap-1  '>
-  <Link to ='/'>
-  <button className='bg-[#FFCA09] text-black p-2 rounded font-semibold poppins md:w-96 w-full md:text-base text-sm flex items-center justify-center'>
-    Make a Booking <FaCalendarPlus className="md:mr-2 mr-1 md:ml-2 ml-1" />
-  </button>
-  </Link>
- 
-  <button onClick={viewbookings} className='bg-[#FFCA09] text-black p-2 rounded font-semibold poppins md:text-base text-sm md:w-96 w-1/2 flex items-center justify-center'>
-    View Bookings <img src={viewbook} className='mr-2 ml-2 -mb-1 h-5 w-5' />
-  </button>
- 
-</div>
 
+    <div
+      className='bg-white mx-auto mt-[-4rem] rounded-2xl shadow-xl max-w-5xl'
+      style={{ fontFamily: "Poppins, sans-serif" }}
+    >
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-black to-gray-900 rounded-t-2xl px-8 py-8 md:px-12 md:py-10">
+        <h1 className='font-bold text-3xl md:text-4xl text-[#FFCA09] tracking-tight'>TAXIGO</h1>
+        <h5 className='text-lg md:text-xl mt-1 text-white/80 font-light'>Your Profile Dashboard</h5>
+      </div>
 
-        <h4 className='pt-5 font-semibold'>Recover Your Quotes</h4>
-        <p className='text-[#667085] pb-5 md:w-3/5'>If we have previously quoted for a Journey you can select the quote here and 
-proceed with booking. You can also call us with the reference number from
-your quote and continue your booking over the phone. </p>
-
-<button onClick={viewQuote} className='bg-[#FFCA09] text-black p-2 rounded  font-semibold poppins flex md:w-96 w-full items-center justify-center '>View Quotes <img src={quotes} className='mr-2 ml-2'  /></button>
-
-<h4 className='pt-5 font-semibold'>Manage Payment Methods</h4>
-<p className='text-[#667085] pb-5 md:w-3/5'>If you have previously saved cards while booking online you may review and
-remove them here.</p>
-
-<button onClick={managecard} className='bg-[#FFCA09] text-black p-2 rounded  font-semibold  poppins flex md:w-96 w-full items-center justify-center '>Card Details <FaCreditCard className="mr-2 ml-2" /> </button>
-
-<h4 className='pt-5 font-semibold'>Update Your Details</h4>
-        <p className='text-[#667085] pb-5 md:w-3/5'>Keeping your details Up to date helps us to contact you in the event of 
-        a problem with your booking. You may Also Change your Password here.</p>
-        <div className='flex gap-6'>
-        <button onClick={handleLogout} className='bg-[#FFCA09] text-black p-2 rounded font-semibold poppins md:text-base text-sm md:w-96 w-5/2 px-5 flex items-center justify-center '>Log Out <img src={logoutimg} className='mr-2 ml-2 md:h-4 md:w-4 h-3 w-3 ' /> </button>
-        <Link to='/edit-profile'>
-        <button className='bg-[#FFCA09] text-black p-2 rounded font-semibold poppins md:text-base text-sm md:w-96 w-full flex items-center px-5 justify-center '>Edit Profile <FaPencilAlt className="mr-2 ml-2 h-4 w-4 " /> </button>
-         </Link>
+      <div className="px-6 py-8 md:px-12 md:py-10">
+        {/* Intro */}
+        <div className="mb-8 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-5 md:p-6 border border-amber-100">
+          <h4 className='font-semibold text-base md:text-lg text-gray-800 leading-relaxed'>
+            From here you can manage Bookings you've made, create new bookings, or change your account information.
+          </h4>
         </div>
+
+        {/* Rides History Section */}
+        <div className="mb-8 bg-gray-50 rounded-xl p-5 md:p-6 border border-gray-100"
+          style={{ transition: "box-shadow 0.3s ease" }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.06)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-[#FFCA09] flex items-center justify-center shadow-sm">
+              <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h4 className='font-bold text-lg text-gray-800'>Rides History</h4>
+          </div>
+          <p className='text-gray-500 text-sm md:text-base mb-4 leading-relaxed'>
+            Access your Rides history to see all your previous rides and other ride details.
+          </p>
+          <button
+            onClick={ridehistory}
+            className="text-black py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full md:w-auto md:min-w-[280px] text-sm md:text-base shadow-md"
+            style={{
+              background: "linear-gradient(135deg, #FFCA09 0%, #FFAE00 100%)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 25px rgba(255, 202, 9, 0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "";
+            }}
+          >
+            Rides History <img src={bucket} className='w-5 h-5' alt="" />
+          </button>
+        </div>
+
+        {/* Manage Bookings Section */}
+        <div className="mb-8 bg-gray-50 rounded-xl p-5 md:p-6 border border-gray-100"
+          style={{ transition: "box-shadow 0.3s ease" }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.06)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-[#FFCA09] flex items-center justify-center shadow-sm">
+              <FaCalendarPlus className="w-4 h-4 text-black" />
+            </div>
+            <h4 className='font-bold text-lg text-gray-800'>Manage Your Bookings</h4>
+          </div>
+          <p className='text-gray-500 text-sm md:text-base mb-4 leading-relaxed'>
+            You can make amendments to your bookings up until 24 hours before your journey is due to start. You can also download copies of receipts for previous bookings here.
+          </p>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+            <Link to='/' className="block">
+              <button
+                className='text-black py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full text-sm md:text-base shadow-md'
+                style={{
+                  background: "linear-gradient(135deg, #FFCA09 0%, #FFAE00 100%)",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(255, 202, 9, 0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "";
+                }}
+              >
+                Make a Booking <FaCalendarPlus className="w-4 h-4" />
+              </button>
+            </Link>
+            <button
+              onClick={viewbookings}
+              className='text-black py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full text-sm md:text-base shadow-md'
+              style={{
+                background: "linear-gradient(135deg, #FFCA09 0%, #FFAE00 100%)",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 25px rgba(255, 202, 9, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "";
+              }}
+            >
+              View Bookings <img src={viewbook} className='w-5 h-5' alt="" />
+            </button>
+          </div>
+        </div>
+
+        {/* Recover Quotes Section */}
+        <div className="mb-8 bg-gray-50 rounded-xl p-5 md:p-6 border border-gray-100"
+          style={{ transition: "box-shadow 0.3s ease" }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.06)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-[#FFCA09] flex items-center justify-center shadow-sm">
+              <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h4 className='font-bold text-lg text-gray-800'>Recover Your Quotes</h4>
+          </div>
+          <p className='text-gray-500 text-sm md:text-base mb-4 leading-relaxed'>
+            If we have previously quoted for a journey you can select the quote here and proceed with booking. You can also call us with the reference number from your quote and continue your booking over the phone.
+          </p>
+          <button
+            onClick={viewQuote}
+            className='text-black py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full md:w-auto md:min-w-[280px] text-sm md:text-base shadow-md'
+            style={{
+              background: "linear-gradient(135deg, #FFCA09 0%, #FFAE00 100%)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 25px rgba(255, 202, 9, 0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "";
+            }}
+          >
+            View Quotes <img src={quotes} className='w-5 h-5' alt="" />
+          </button>
+        </div>
+
+        {/* Payment Methods Section */}
+        <div className="mb-8 bg-gray-50 rounded-xl p-5 md:p-6 border border-gray-100"
+          style={{ transition: "box-shadow 0.3s ease" }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.06)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-[#FFCA09] flex items-center justify-center shadow-sm">
+              <FaCreditCard className="w-4 h-4 text-black" />
+            </div>
+            <h4 className='font-bold text-lg text-gray-800'>Manage Payment Methods</h4>
+          </div>
+          <p className='text-gray-500 text-sm md:text-base mb-4 leading-relaxed'>
+            If you have previously saved cards while booking online you may review and remove them here.
+          </p>
+          <button
+            onClick={managecard}
+            className='text-black py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full md:w-auto md:min-w-[280px] text-sm md:text-base shadow-md'
+            style={{
+              background: "linear-gradient(135deg, #FFCA09 0%, #FFAE00 100%)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 25px rgba(255, 202, 9, 0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "";
+            }}
+          >
+            Card Details <FaCreditCard className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Update Details / Account Section */}
+        <div className="mb-4 bg-gray-50 rounded-xl p-5 md:p-6 border border-gray-100"
+          style={{ transition: "box-shadow 0.3s ease" }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.06)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-[#FFCA09] flex items-center justify-center shadow-sm">
+              <FaPencilAlt className="w-4 h-4 text-black" />
+            </div>
+            <h4 className='font-bold text-lg text-gray-800'>Update Your Details</h4>
+          </div>
+          <p className='text-gray-500 text-sm md:text-base mb-4 leading-relaxed'>
+            Keeping your details up to date helps us contact you in the event of a problem with your booking. You may also change your password here.
+          </p>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+            <button
+              onClick={handleLogout}
+              className='bg-black text-[#FFCA09] py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full text-sm md:text-base shadow-md'
+              style={{
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 25px rgba(0, 0, 0, 0.25)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "";
+              }}
+            >
+              Log Out <img src={logoutimg} className='w-4 h-4' alt="" />
+            </button>
+            <Link to='/edit-profile' className="block">
+              <button
+                className='text-black py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2 w-full text-sm md:text-base shadow-md'
+                style={{
+                  background: "linear-gradient(135deg, #FFCA09 0%, #FFAE00 100%)",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(255, 202, 9, 0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "";
+                }}
+              >
+                Edit Profile <FaPencilAlt className="w-4 h-4" />
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

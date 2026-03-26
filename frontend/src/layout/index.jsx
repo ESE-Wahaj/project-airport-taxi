@@ -5,51 +5,107 @@ import Footer from '../components/Footer';
 import InfoSection from '../components/InfoSection';
 import { useLocation } from 'react-router-dom';
 import AdminHeader from '../components/AdminHeader';
-const Layout = ({ children, backURL, isLoggedIn  }) => {
-  const location = useLocation(); 
- 
+
+const Layout = ({ children, backURL, isLoggedIn }) => {
+  const location = useLocation();
+
   const isAdminPage = location.pathname.toLowerCase() === '/admin/fleet' ||
-  location.pathname.toLowerCase() === '/admin/fleet/' ||
-  location.pathname.toLowerCase() === '/admin/login' ||
-  location.pathname.toLowerCase() === '/admin/dashboard'||
-  location.pathname.toLowerCase() === '/admin/forget-password'||
-  /^\/admin\/edit-fleet\/[^/]+$/.test(location.pathname.toLowerCase());
+    location.pathname.toLowerCase() === '/admin/fleet/' ||
+    location.pathname.toLowerCase() === '/admin/login' ||
+    location.pathname.toLowerCase() === '/admin/dashboard' ||
+    location.pathname.toLowerCase() === '/admin/forget-password' ||
+    /^\/admin\/edit-fleet\/[^/]+$/.test(location.pathname.toLowerCase());
   console.log(isAdminPage);
   console.log(location.pathname);
-  
 
   return (
-  <div >      {/* Pass user prop to Header */}
-       {!isAdminPage ? <Header isLoggedIn={isLoggedIn} />:<AdminHeader isLoggedIn={isLoggedIn} />}
-      
-      <div className="relative w-full h-[570px] md:h-[700px] overflow-hidden">
-        <img src={Hero} alt="Hero" className="w-full h-full bg-cover object-cover" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-40">
-          <div className="absolute inset-0 flex flex-col items-center justify-center transform -translate-y-12 mt-40 md:mt-36">
-            <h1 className="text-3xl md:text-5xl font-bold text-[#FFCA09] [text-shadow:_2px_10px_4.8px_rgb(0_0_0_/_44%)] mb-4 text-center drop-shadow-lg shadow-black poppins-semibold">
+    <div className="min-h-screen flex flex-col font-[Poppins]">
+      {/* Header */}
+      {!isAdminPage ? <Header isLoggedIn={isLoggedIn} /> : <AdminHeader isLoggedIn={isLoggedIn} />}
+
+      {/* Hero Section */}
+      <div className="relative w-full h-[80vh] min-h-[480px] max-h-[800px] overflow-hidden">
+        {/* Hero Image */}
+        <img
+          src={Hero}
+          alt="Hero"
+          className="w-full h-full object-cover scale-105 animate-[slowZoom_20s_ease-in-out_infinite_alternate]"
+        />
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/90" />
+
+        {/* Hero Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+          <div className="flex flex-col items-center justify-center -translate-y-4 md:-translate-y-8">
+            {/* Decorative top line */}
+            <div className="w-16 h-[2px] bg-gradient-to-r from-transparent via-[#FFCA09] to-transparent mb-6 opacity-80" />
+
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#FFCA09] mb-3 text-center font-[Poppins] tracking-tight leading-tight"
+              style={{ textShadow: '0 4px 20px rgba(0,0,0,0.6)' }}
+            >
               Your Ride At One Call
             </h1>
-            <p className="text-xl md:text-3xl text-white text-center inter [text-shadow:_2px_10px_4.8px_rgb(0_0_0_/_44%)] font-medium">
-              ALL IN ONE TRAVEL SOLUTIONS
+
+            <p
+              className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 text-center font-[Poppins] font-light tracking-[0.25em] uppercase mt-1"
+              style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}
+            >
+              All In One Travel Solutions
             </p>
+
+            {/* Decorative bottom line */}
+            <div className="w-24 h-[2px] bg-gradient-to-r from-transparent via-[#FFCA09] to-transparent mt-6 opacity-80" />
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+            <span className="text-white/50 text-xs tracking-[0.2em] uppercase font-[Poppins]">Scroll</span>
+            <svg
+              className="w-5 h-5 text-[#FFCA09]/70"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
         </div>
       </div>
 
-      <div className="bg-[#000000]">
-        <div className="relative z-10 w-full max-w-7xl mx-auto p-4 -mt-48 md:-mt-20 lg:-mt-48">
-          {children}
+      {/* Main Content Area */}
+      <div className="bg-black flex-1">
+        {/* Children (booking form etc.) - overlaps hero */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 md:-mt-24 lg:-mt-40">
+          <div className="transition-all duration-500 ease-out">
+            {children}
+          </div>
         </div>
-        <div className={isAdminPage ? 'md:mt-[25%] mt-72' : ''}></div>
-        <div className="flex flex-grow text-white py-2 px-6">
-          <div className="mt-0 md:mt-2 lg:mt-4">
+
+        {/* Admin page spacing */}
+        {isAdminPage && (
+          <div className="pt-48 md:pt-64 lg:pt-72" />
+        )}
+
+        {/* Info Section */}
+        <div className="w-full text-white">
+          <div className="mt-8 md:mt-12 lg:mt-16">
             <InfoSection />
           </div>
         </div>
-        <div>
-          <Footer />
-        </div>
+
+        {/* Footer */}
+        <Footer />
       </div>
+
+      {/* Keyframe for slow zoom animation */}
+      <style>{`
+        @keyframes slowZoom {
+          0% { transform: scale(1.0); }
+          100% { transform: scale(1.08); }
+        }
+      `}</style>
     </div>
   );
 };

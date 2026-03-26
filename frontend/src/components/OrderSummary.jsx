@@ -6,12 +6,12 @@ import { useLocation } from "react-router-dom";
 import { getCurrentBooking } from "../api/api";
 import { BackYellow } from "../assets";
 
-const OrderSummary = ({ isOneWay,fare }) => {
-    const location = useLocation(); 
+const OrderSummary = ({ isOneWay, fare }) => {
+    const location = useLocation();
     const [isTwoWay,setIsTwoWay]=useState(false)
     const [meetandgreet,setmeetAndGreet]=useState(false)
 
-    
+
 
     const useQuery = () => {
       return new URLSearchParams(useLocation().search);
@@ -24,10 +24,10 @@ const OrderSummary = ({ isOneWay,fare }) => {
     const lid = query.get('lid');
     const [data,setData] =useState()
     const back=()=>{
-        // navigate(`/`) 
-      
+        // navigate(`/`)
+
           navigate(-1); // Previous page par navigate karein
-        
+
     }
     useEffect(() => {
       const fetchData = async () => {
@@ -43,13 +43,13 @@ const OrderSummary = ({ isOneWay,fare }) => {
 
     fetchData();
   }, [user_id, id]);
-    const standardFare = data?data.standard_fare:""; 
+    const standardFare = data?data.standard_fare:"";
     const meetAndGreet =  meetandgreet ? 50 : 0;
     const FareDiscount = data?data.multiple_journey_disc:"";
     const oneWayTotalFare = standardFare + meetAndGreet;
     const twoWayTotalFare = ((standardFare * 2)) + meetAndGreet - (FareDiscount*2);
-    const [journeyDetails, setJourneyDetails] = useState(isOneWay); 
-    
+    const [journeyDetails, setJourneyDetails] = useState(isOneWay);
+
     useEffect(() => {
         // Update the state when the prop changes
         setJourneyDetails(isOneWay);
@@ -59,7 +59,7 @@ const OrderSummary = ({ isOneWay,fare }) => {
     const payout=()=>{
         navigate(`/Cardpage/${user_id}/${id}`)
       }
-     
+
     const singleOrderDetails = data ? [
         { label: "Start:", value: data.start_point.name },
         { label: "End:", value: data.end_point.name },
@@ -126,105 +126,216 @@ const OrderSummary = ({ isOneWay,fare }) => {
     { label: "Multiple Journey Discount:", value: `£${FareDiscount}` },
     { label: "Standard Fare:", value: `£${(standardFare * 2)}` },
     { label: "Meet and Greet:", value: `+£${meetAndGreet}` },
+    { label: "Total Fare:", value: `£${twoWayTotalFare}` },
+  ];
 
-        { label: "Total Fare:", value: `£${twoWayTotalFare}` },
-    ];
-   
+  /* ---- Reusable sub-components for cleaner JSX ---- */
+
+  const JourneyDetailRow = ({ label, value, index }) => (
+    <div
+      className="flex flex-col sm:flex-row sm:items-center justify-between py-3 px-4 md:px-5 transition-colors duration-150"
+      style={{
+        backgroundColor: index % 2 === 0 ? "#FAFAFA" : "#FFFFFF",
+        fontFamily: "'Poppins', sans-serif",
+      }}
+    >
+      <span className="text-[13px] md:text-[15px] font-semibold text-[#111D47] tracking-wide">
+        {label}
+      </span>
+      <span className="text-[13px] md:text-[15px] text-[#444] font-medium text-left sm:text-right mt-0.5 sm:mt-0">
+        {value}
+      </span>
+    </div>
+  );
+
+  const FareRow = ({ label, value, isTotal }) => (
+    <div
+      className="flex items-center justify-between py-3 px-4 md:px-6 transition-all duration-200"
+      style={{
+        backgroundColor: isTotal ? "#FEB601" : "#111D47",
+        fontFamily: "'Poppins', sans-serif",
+        borderRadius: isTotal ? "12px" : "8px",
+        marginTop: isTotal ? "8px" : "4px",
+        boxShadow: isTotal ? "0 4px 14px rgba(254, 182, 1, 0.35)" : "none",
+      }}
+    >
+      <span
+        className="font-semibold text-[13px] md:text-[16px]"
+        style={{ color: isTotal ? "#111D47" : "#FFCA09" }}
+      >
+        {label}
+      </span>
+      <span
+        className="font-bold text-[15px] md:text-[20px]"
+        style={{ color: isTotal ? "#000" : "#FFF" }}
+      >
+        {value}
+      </span>
+    </div>
+  );
+
+  const JourneySection = ({ title, details, journeyNumber }) => (
+    <div className="mb-6">
+      <div
+        className="flex items-center gap-3 mb-3 px-1"
+        style={{ fontFamily: "'Poppins', sans-serif" }}
+      >
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+          style={{ backgroundColor: "#FEB601", color: "#111D47" }}
+        >
+          {journeyNumber}
+        </div>
+        <h3 className="text-base md:text-lg font-bold text-[#111D47] uppercase tracking-wide">
+          {title}
+        </h3>
+      </div>
+      <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+        {details.map((detail, index) => (
+          <JourneyDetailRow
+            key={index}
+            label={detail.label}
+            value={detail.value}
+            index={index}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
+  const FareBreakdown = ({ fareDetails, title }) => {
+    const regularFares = fareDetails.filter(
+      (f) => f.label !== "Total Fare:"
+    );
+    const totalFare = fareDetails.find((f) => f.label === "Total Fare:");
+
     return (
-        <>
-            <div className="min-h-screen  bg-gray-100 py-12 relative">
-                <div className="container mt-[-4rem] md:mt-[-7rem] lg:mx-auto mx-auto">
-                    <div className="bg-white rounded-3xl -mt-6 md:-mt-16 shadow-lg p-12 w-full lg:w-[100%] mx-auto">
-                        <h2 className="text-4xl font-bold mb-2 text-[#333333]">TAXIGO</h2>
-                        <p className="text-lg mb-6">Your Order Summary</p>
-                         
+      <div className="mt-6 mb-2">
+        <div
+          className="flex items-center gap-3 mb-3 px-1"
+          style={{ fontFamily: "'Poppins', sans-serif" }}
+        >
+          <div
+            className="w-1.5 h-7 rounded-full"
+            style={{ backgroundColor: "#FEB601" }}
+          />
+          <h3 className="text-base md:text-lg font-bold text-[#111D47] uppercase tracking-wide">
+            {title || "Fare Breakdown"}
+          </h3>
+        </div>
+        <div className="space-y-1">
+          {regularFares.map((fare, index) => (
+            <FareRow key={index} label={fare.label} value={fare.value} />
+          ))}
+          {totalFare && (
+            <FareRow label={totalFare.label} value={totalFare.value} isTotal />
+          )}
+        </div>
+      </div>
+    );
+  };
 
+  return (
+    <>
+      <div className="min-h-screen bg-gray-100 py-12 relative">
+        <div className="container mt-[-4rem] md:mt-[-7rem] lg:mx-auto mx-auto">
+          <div className="bg-white rounded-3xl -mt-6 md:-mt-16 shadow-lg p-5 sm:p-8 md:p-12 w-full lg:w-[100%] mx-auto">
+            {/* Header */}
+            <div className="mb-6 md:mb-8">
+              <h2
+                className="text-3xl md:text-4xl font-extrabold tracking-tight"
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  color: "#111D47",
+                }}
+              >
+                TAXIGO
+              </h2>
+              <div className="flex items-center gap-3 mt-2">
+                <div
+                  className="w-10 h-1 rounded-full"
+                  style={{ backgroundColor: "#FEB601" }}
+                />
+                <p
+                  className="text-base md:text-lg font-semibold text-[#555]"
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
+                >
+                  Your Order Summary
+                </p>
+              </div>
+            </div>
 
-                        {/* Conditionally render based on journeyDetails state */}
-                        {isTwoWay ? (
-                            <>
-                                <p className="text-lg mb-6">FIRST JOURNEY</p>
-                                {FirstJourneyOrderDetails.map((detail, index) => (
-                                    <div className="flex justify-between" key={index}>
-                                        <h5 className="text-[#FE9901] font-semibold md:text-xl text-lg poppins">{detail.label}</h5>
-                                        <h5 className="text-right font-md md:text-xl text-md poppins">{detail.value}</h5>
-                                    </div>
-                                ))}
-                                <p className="text-lg mb-6 mt-6">SECOND JOURNEY</p>
-                                {SecondJourneyOrderDetails.map((detail, index) => (
-                                    <div className="flex justify-between" key={index}>
-                                        <h5 className="text-[#FE9901] font-semibold md:text-xl text-lg poppins">{detail.label}</h5>
-                                        <h5 className="text-right font-md md:text-xl text-md poppins">{detail.value}</h5>
-                                    </div>
-                                ))}
-
-                {/* Fare Details */}
-                {ReturnfareDetails.map((fare, index) => (
-                  <div
-                    className={`flex justify-between mt-2 p-2 rounded ${
-                      index === 3 ? "bg-black" : "bg-[#111D47]"
-                    }`}
-                    key={index}
-                  >
-                    <h5 className="text-[#FE9901] font-semibold md:ml-5 md:text-xl text-md poppins">
-                      {fare.label}
-                    </h5>
-                    <h5 className="text-right font-semibold text-white text-xl">
-                      {fare.value}
-                    </h5>
-                  </div>
-                ))}
+            {/* Conditionally render based on journeyDetails state */}
+            {isTwoWay ? (
+              <>
+                <JourneySection
+                  title="First Journey"
+                  details={FirstJourneyOrderDetails}
+                  journeyNumber={1}
+                />
+                <JourneySection
+                  title="Second Journey"
+                  details={SecondJourneyOrderDetails}
+                  journeyNumber={2}
+                />
+                <FareBreakdown fareDetails={ReturnfareDetails} title="Return Fare Breakdown" />
               </>
             ) : (
               <>
                 {/* Single Journey Details */}
-                {singleOrderDetails.map((detail, index) => (
-                  <div className="flex justify-between" key={index}>
-                    <h5 className="text-[#FE9901] font-semibold md:text-xl text-lg poppins">
-                      {detail.label}
-                    </h5>
-                    <h5 className="text-right font-md md:text-xl text-md poppins">
-                      {detail.value}
-                    </h5>
-                  </div>
-                ))}
-
-                {/* One-way Fare Details */}
-                {OnewayfareDetails.map((fare, index) => (
-                  <div
-                    className={`flex justify-between mt-2 p-2 rounded ${
-                      index === 2 ? "bg-black" : "bg-[#111D47]"
-                    }`}
-                    key={index}
-                  >
-                    <h5 className="text-[#FE9901] font-semibold md:ml-5 md:text-xl text-md poppins">
-                      {fare.label}
-                    </h5>
-                    <h5 className="text-right font-semibold text-white text-xl">
-                      {fare.value}
-                    </h5>
-                  </div>
-                ))}
+                <JourneySection
+                  title="Journey Details"
+                  details={singleOrderDetails}
+                  journeyNumber={1}
+                />
+                <FareBreakdown fareDetails={OnewayfareDetails} title="Fare Breakdown" />
               </>
             )}
 
-            <div className="md:flex justify-center md:gap-20 mt-8">
-             
-            <button
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-5 mt-8 md:mt-10">
+              <button
                 onClick={back}
-                className="bg-black text-[#FEB601] p-2 py-3 text-xl font-semibold rounded md:w-[400px] w-full flex max-w-xl items-center mb-2 justify-center"
+                className="group flex items-center justify-center gap-2 px-8 py-3.5 text-base md:text-lg font-semibold rounded-xl w-full sm:w-auto sm:min-w-[220px] md:min-w-[280px] transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  backgroundColor: "#000",
+                  color: "#FEB601",
+                  border: "2px solid #000",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#111D47";
+                  e.currentTarget.style.borderColor = "#111D47";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#000";
+                  e.currentTarget.style.borderColor = "#000";
+                }}
               >
                 Back
-                <img src={BackYellow} className="ml-2 mr-2 pt-1 " ></img>
+                <img src={BackYellow} className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" alt="back" />
               </button>
               <button
                 onClick={payout}
-                className="bg-[#FEB601] text-black p-2 py-3 text-xl font-semibold rounded md:w-[400px] w-full flex max-w-xl items-center mb-2 justify-center"
+                className="group flex items-center justify-center gap-2 px-8 py-3.5 text-base md:text-lg font-semibold rounded-xl w-full sm:w-auto sm:min-w-[220px] md:min-w-[280px] transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  backgroundColor: "#FEB601",
+                  color: "#000",
+                  border: "2px solid #FEB601",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#FFAE00";
+                  e.currentTarget.style.borderColor = "#FFAE00";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#FEB601";
+                  e.currentTarget.style.borderColor = "#FEB601";
+                }}
               >
                 Proceed to Pay
-                <HiShoppingCart className="ml-2 mr-2" />
+                <HiShoppingCart className="text-xl transition-transform duration-300 group-hover:translate-x-1" />
               </button>
-           
             </div>
           </div>
         </div>

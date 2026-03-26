@@ -27,18 +27,20 @@ const CustomDropdown = ({ options, placeholder, onChange }) => {
   return (
     <div className="relative">
       <div
-        className="bg-white border border-[#666666] text-[#666666] rounded-md p-2 flex justify-between items-center cursor-pointer"
+        className="bg-gray-50 border-2 border-gray-200 text-gray-600 rounded-xl px-4 py-3 flex justify-between items-center cursor-pointer hover:border-[#FFCA09] focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 transition-all duration-200"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {selectedOption || placeholder}
-        <ChevronDown size={20} />
+        <span className={selectedOption ? "text-gray-800" : "text-gray-400"}>
+          {selectedOption || placeholder}
+        </span>
+        <ChevronDown size={18} className={`text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </div>
       {isOpen && (
-        <ul className="absolute z-10 w-full bg-white border text-[#666666] border-[#666666] rounded-md mt-1 max-h-60 overflow-auto">
+        <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl mt-2 max-h-60 overflow-auto shadow-lg">
           {options.map((option, index) => (
             <li
               key={index}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
+              className="px-4 py-3 hover:bg-[#FFCA09]/10 text-gray-700 cursor-pointer transition-colors duration-150 first:rounded-t-xl last:rounded-b-xl"
               onClick={() => handleSelect(option)}
             >
               {option}
@@ -65,7 +67,7 @@ const PhoneNumberInput = ({ onPhoneChange }) => {
   const handlePhoneNumberChange = (value) => {
     setPhoneNumber(value);
     onPhoneChange(value);
-    
+
   };
 
   return (
@@ -75,7 +77,7 @@ const PhoneNumberInput = ({ onPhoneChange }) => {
         value={phoneNumber}
         onChange={handlePhoneNumberChange}
         placeholder="+44 12345679"
-        className="ml-1 w-full border border-[#666666] rounded-lg p-3"
+        className="ml-1 w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-3 focus-within:border-[#FFCA09] focus-within:ring-2 focus-within:ring-[#FFCA09]/20 transition-all duration-200"
       />
     </div>
   );
@@ -198,12 +200,12 @@ const BookmeeForm = () => {
 // console.log("guest locations",storedData)
       const form_data = {
         ...formData,
-        quote_ids: guestQuotesIDs, 
+        quote_ids: guestQuotesIDs,
       };
       const res = await Passengers_details(form_data);
       setuserid(res.data.user_id);
       setbid(res.data.id);
-      
+
       // console.log(res.data.user_id);
       localStorage.removeItem('locationIds');
 
@@ -229,66 +231,78 @@ const BookmeeForm = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto mt-[-1rem] md:mt-[-4rem]">
-      <h2 className="text-3xl font-bold mb-4 text-[#333333]">TAXIGO</h2>
-      <h3 className="text-lg mb-6 text-[#666666]">Enter Passenger Details</h3>
+    <div className="bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-lg border border-gray-100 max-w-4xl mx-auto mt-[-1rem] md:mt-[-4rem] font-[Poppins]">
+      {/* Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">TAXIGO</h2>
+        <div className="flex items-center gap-3 mt-2">
+          <div className="h-1 w-10 bg-gradient-to-r from-[#FFCA09] to-[#FFAE00] rounded-full"></div>
+          <h3 className="text-lg font-medium text-gray-500">Enter Passenger Details</h3>
+        </div>
+      </div>
 
       <form onSubmit={handleContinue}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* First Name */}
           <div>
-            <label className="text-[#FEB601] block mb-2">First Name *</label>
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">First Name *</label>
             <input
               type="text"
               placeholder="John"
-              className="border text-[#666666] rounded-md p-3 w-full"
+              className="bg-gray-50 border-2 border-gray-200 text-gray-800 rounded-xl px-4 py-3 w-full focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 focus:outline-none transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-500"
               value={firstname}
               disabled={isAuthenticated}
               onChange={(e) => setFirstName(e.target.value)}
             />
             {firstError && (
-              <p className="text-redfive text-sm mt-1">{firstError}</p>
+              <p className="text-red-500 text-sm mt-1.5 font-medium">{firstError}</p>
             )}
           </div>
+
+          {/* Last Name */}
           <div>
-            <label className="text-[#FEB601] block mb-2">Last Name *</label>
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">Last Name *</label>
             <input
               type="text"
               placeholder="Doe"
-              className="border text-[#666666] rounded-md p-3 w-full"
+              className="bg-gray-50 border-2 border-gray-200 text-gray-800 rounded-xl px-4 py-3 w-full focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 focus:outline-none transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-500"
               value={lastname}
               disabled={isAuthenticated}
               onChange={(e) => setLastName(e.target.value)}
             />
             {lastError && (
-              <p className="text-redfive text-sm mt-1">{lastError}</p>
+              <p className="text-red-500 text-sm mt-1.5 font-medium">{lastError}</p>
             )}
           </div>
 
-          <div className="mb-2">
-            <label className="text-[#FEB601] block mb-2">Mobile Number *</label>
+          {/* Mobile Number */}
+          <div>
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">Mobile Number *</label>
             <PhoneNumberInput onPhoneChange={setPhone} />
             {phoneError && (
-              <p className="text-redfive text-sm mt-1">{phoneError}</p>
+              <p className="text-red-500 text-sm mt-1.5 font-medium">{phoneError}</p>
             )}
           </div>
 
+          {/* Email */}
           <div>
-            <label className="text-[#FEB601] block mb-2">E-mail *</label>
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">E-mail *</label>
             <input
               type="email"
               placeholder="Email@yahoo.com"
-              className="border text-[#666666] rounded-md p-3 w-full"
+              className="bg-gray-50 border-2 border-gray-200 text-gray-800 rounded-xl px-4 py-3 w-full focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 focus:outline-none transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-500"
               value={email}
               disabled={isAuthenticated}
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailError && (
-              <div className="text-redfive text-sm">{emailError}</div>
+              <p className="text-red-500 text-sm mt-1.5 font-medium">{emailError}</p>
             )}
           </div>
 
+          {/* Passengers */}
           <div>
-            <label className="text-[#FEB601] block mb-2">Passengers</label>
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">Passengers</label>
             <CustomDropdown
               options={[
                 "1 Person",
@@ -301,8 +315,10 @@ const BookmeeForm = () => {
               onChange={(option) => setPassengers(parseInt(option, 10))}
             />
           </div>
+
+          {/* Number of Suitcases */}
           <div>
-            <label className="text-[#FEB601] block mb-2">
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">
               Number of Suitcases
             </label>
             <CustomDropdown
@@ -318,37 +334,41 @@ const BookmeeForm = () => {
             />
           </div>
 
+          {/* Flight Number */}
           <div>
-            <label className="text-[#FEB601] block mb-2">Flight Number</label>
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">Flight Number</label>
             <input
               type="text"
               placeholder="DEX-001100"
-              className="border text-[#666666] rounded-md p-3 w-full"
+              className="bg-gray-50 border-2 border-gray-200 text-gray-800 rounded-xl px-4 py-3 w-full focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 focus:outline-none transition-all duration-200"
               value={flight_number}
               onChange={(e) => setFlightNumber(e.target.value)}
             />
             {flightError && (
-              <p className="text-redfive text-sm mt-1">{flightError}</p>
+              <p className="text-red-500 text-sm mt-1.5 font-medium">{flightError}</p>
             )}
           </div>
+
+          {/* Flight Arriving From */}
           <div>
-            <label className="text-[#FEB601] block mb-2">
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">
               Flight Arriving From
             </label>
             <input
               type="text"
               placeholder="Manchester"
-              className="border text-[#666666] rounded-md p-3 w-full"
+              className="bg-gray-50 border-2 border-gray-200 text-gray-800 rounded-xl px-4 py-3 w-full focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 focus:outline-none transition-all duration-200"
               value={flight_arriving_from}
               onChange={(e) => setFlightFrom(e.target.value)}
             />
             {flightArrError && (
-              <p className="text-redfive text-sm mt-1">{flightArrError}</p>
+              <p className="text-red-500 text-sm mt-1.5 font-medium">{flightArrError}</p>
             )}
           </div>
 
+          {/* Meet & Greet */}
           <div>
-            <label className="text-[#FEB601] block mb-2">
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">
               Meet & Greet on Arrival
             </label>
             <CustomDropdown
@@ -357,11 +377,13 @@ const BookmeeForm = () => {
               onChange={setMeetGreet}
             />
           </div>
+
+          {/* Flight Arrival Date & Time */}
           <div>
-            <label className="text-[#FEB601] block mb-2">
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">
               Flight Arrival Date & Time
             </label>
-            <div className="relative ">
+            <div className="relative">
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
@@ -369,14 +391,15 @@ const BookmeeForm = () => {
                 timeFormat="HH:mm"
                 timeIntervals={15}
                 dateFormat="MMMM d, yyyy h:mm aa"
-                className="customdatapicker border text-[#666666] rounded-md p-3 w-full"
+                className="customdatapicker bg-gray-50 border-2 border-gray-200 text-gray-800 rounded-xl px-4 py-3 w-full focus:border-[#FFCA09] focus:ring-2 focus:ring-[#FFCA09]/20 focus:outline-none transition-all duration-200"
                 placeholderText="Select a date and time"
               />
             </div>
           </div>
 
+          {/* Pet */}
           <div>
-            <label className="text-[#FEB601] block mb-2">
+            <label className="text-sm font-semibold text-[#FEB601] block mb-2">
               Do you have a pet with you?
             </label>
             <CustomDropdown
@@ -387,20 +410,21 @@ const BookmeeForm = () => {
           </div>
         </div>
 
-        <div className="flex max-sm:flex-col max-sm:gap-2 max-sm:px-9 md:px-32 mt-8 lg:justify-center lg:space-x-9 md:space-x-16">
-          <Link to={`/fleet/${lid}`}>
-            <button className="text-[#FFCA09] bg-black gap-2 font-bold lg:px-4 py-2 max-sm:w-[250px] lg:w-[280px] md:w-[200px] w-[120px] rounded-lg flex items-center justify-center">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+          <Link to={`/fleet/${lid}`} className="w-full sm:w-auto">
+            <button className="w-full sm:w-[260px] bg-black text-[#FFCA09] font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5">
               Back
-              <img src={BackYellow} alt="Back Icon" className="h-3 w-3" />
+              <img src={BackYellow} alt="Back Icon" className="h-3.5 w-3.5" />
             </button>
           </Link>
           <button
             onClick={handleContinue}
-            className="text-black gap-2 bg-[#FFCA09] font-bold lg:px-4 py-2 max-sm:w-[250px] lg:w-[300px] md:w-[200px] w-[120px] rounded-lg flex items-center justify-center"
+            className="w-full sm:w-[280px] bg-gradient-to-r from-[#FFCA09] to-[#FFAE00] text-black font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
             type="submit"
           >
             Continue
-            <img src={Continue} alt="" className="h-3 w-3" />
+            <img src={Continue} alt="" className="h-3.5 w-3.5" />
           </button>
         </div>
       </form>

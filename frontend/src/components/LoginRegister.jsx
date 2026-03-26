@@ -19,8 +19,8 @@ export const LoginRegister = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false); 
-  const [showPassword1, setShowPassword1] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
 
   const [passwordi, setPasswordi] = useState("");
   const [confirmPasswordi, setConfirmPasswordi] = useState("");
@@ -53,24 +53,24 @@ const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Password length validation
     if (passwordi.length < 7) {
       setErrorMessage("Password must be at least 8 characters long.");
       console.log(password.length,"length")
       return;
     }
-  
+
     // Password match validation
     if (passwordi !== confirmPasswordi) {
-     
+
       setErrorMessage("Passwords do not match!");
       return;
     }
-  
+
     // If all validations pass, clear the error message
     setErrorMessage("");
-  
+
     // Create an object with the form data
     const userData = {
       firstName,
@@ -83,11 +83,11 @@ const [errorMessage, setErrorMessage] = useState("");
       postcode,
       country,
     };
-  
+
     try {
       // Send the signup request with the user data
       const response = await signup(userData);
-  
+
       // Clear all the form fields after successful signup
       setFirstName("");
       setLastName("");
@@ -114,246 +114,337 @@ const togglePasswordVisibilityi = () => {
 const toggleLoginPasswordVisibility = () => {
   setShowLoginPassword(!showLoginPassword); // Toggle between true and false
 };
+
+  /* Shared input class for consistency */
+  const inputBaseClass =
+    "w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-[#333333] placeholder-gray-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FFCA09]/40 focus:border-[#FEB601] focus:bg-white hover:border-gray-300";
+
   return (
-    <div className="bg-white rounded-3xl -mt-6 md:-mt-16 shadow-lg p-6 max-w-7xl mx-auto">
-      <div className="w-full max-w-7xl bg-white rounded-lg p-8">
-        <h1 className="md:text-5xl text-3xl font-bold text-black mb-4">
-        TAXIGO
+    <div
+      className="bg-white rounded-2xl -mt-6 md:-mt-16 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-gray-100 p-5 sm:p-8 lg:p-10 max-w-5xl mx-auto"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#111111] tracking-tight">
+          TAXIGO
         </h1>
-        <p className="text-lg"> Login/Register</p>
-        <p className="text-sm text-center mb-4 text-[#BDBDBD] max-w-xl mx-auto mt-6">
+        <p className="text-[#888888] text-base sm:text-lg mt-1 font-medium">
+          Login / Register
+        </p>
+        <p className="text-sm text-[#BDBDBD] max-w-xl mt-4 leading-relaxed">
           If you have booked before, an account will have been created for you.
           If you are unsure of this account's credentials, select Reset Password
           below.
         </p>
+      </div>
 
-        {/* Login Section */}
-       
-        <form onSubmit={handleLogin} >
-        <div className="mb-8" >
-          <div className="max-w-md mx-auto">
-            <div className="mb-4">
-              <label className="text-[#FEB601] block font-bold mb-2">
-                E-mail*
+      {/* ===================== LOGIN SECTION ===================== */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 rounded-full bg-[#000000] flex items-center justify-center flex-shrink-0">
+            <FaSignInAlt className="text-[#FFCA09] text-sm" />
+          </div>
+          <h2 className="text-lg sm:text-xl font-bold text-[#111111]">
+            Existing User Login
+          </h2>
+        </div>
+
+        <form onSubmit={handleLogin}>
+          <div className="max-w-md mx-auto space-y-5">
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
+                E-mail *
               </label>
               <input
                 type="email"
                 placeholder="Email@yahoo.com"
-                className="w-full p-2 border border-[#7A7979] rounded"
+                className={inputBaseClass}
                 value={LoginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label className="text-[#FEB601] block font-bold mb-2">
-                Password*
+
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
+                Password *
               </label>
-              <input
-                type="password"
-                placeholder="********"
-                className="w-full p-2 border border-[#7A7979] rounded"
-                value={LoginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
+              <div className="relative">
+                <input
+                  type={showLoginPassword ? "text" : "password"}
+                  placeholder="********"
+                  className={inputBaseClass + " pr-12"}
+                  value={LoginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={toggleLoginPasswordVisibility}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FEB601] transition-colors duration-200 p-1 rounded-md hover:bg-gray-100"
+                >
+                  {showLoginPassword ? (
+                    <VscEyeClosed className="h-5 w-5" />
+                  ) : (
+                    <VscEye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-          <div className="md:flex justify-center md:gap-20  mt-8">
-            <Link to='/forget-password'>
-            <button className="bg-black text-[#FEB601] text-xl p-2 rounded flex w-[30vh] mb-4 md:w-[250px] max-w-md items-center justify-center mr-4">
-              Forget Password
-              <FaLock className="mr-2 ml-3" />
-            </button>
-            </Link>
-            <Link to="/profile">
-              <button  onClick={handleLogin} className="bg-[#FEB601] text-black p-2 text-xl rounded md:w-[250px] w-[30vh] flex max-w-xl items-center justify-center">
-                Log In
-                <FaSignInAlt className="ml-2 mr-2" />
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-8">
+            <Link to="/forget-password" className="w-full sm:w-auto">
+              <button
+                type="button"
+                className="bg-[#000000] text-[#FFCA09] font-semibold text-sm sm:text-base px-6 py-3 rounded-lg flex w-full sm:w-[220px] items-center justify-center gap-2 transition-all duration-200 hover:bg-[#1a1a1a] hover:shadow-lg active:scale-[0.98]"
+              >
+                Forget Password
+                <FaLock className="text-sm" />
               </button>
-              </Link>
-            </div>
+            </Link>
+            <Link to="/profile" className="w-full sm:w-auto">
+              <button
+                type="submit"
+                onClick={handleLogin}
+                className="bg-[#FEB601] text-[#111111] font-semibold text-sm sm:text-base px-6 py-3 rounded-lg flex w-full sm:w-[220px] items-center justify-center gap-2 transition-all duration-200 hover:bg-[#FFCA09] hover:shadow-lg active:scale-[0.98]"
+              >
+                Log In
+                <FaSignInAlt className="text-sm" />
+              </button>
+            </Link>
           </div>
         </form>
+      </div>
 
-        {/* Registration Section */}
-        <p className="text-sm text-center mb-4 text-[#BDBDBD] max-w-xl mx-auto mt-6">
-          If you are a <strong>New User/Customer</strong>, fill all the details
+      {/* ===================== DIVIDER ===================== */}
+      <div className="flex items-center gap-4 my-10">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-gray-200"></div>
+        <span className="text-xs uppercase tracking-widest text-[#BDBDBD] font-semibold px-2">
+          or register
+        </span>
+        <div className="flex-1 h-px bg-gradient-to-l from-transparent via-gray-200 to-gray-200"></div>
+      </div>
+
+      {/* ===================== REGISTRATION SECTION ===================== */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-[#FEB601] flex items-center justify-center flex-shrink-0">
+            <FaUserPlus className="text-[#111111] text-sm" />
+          </div>
+          <h2 className="text-lg sm:text-xl font-bold text-[#111111]">
+            New User Registration
+          </h2>
+        </div>
+        <p className="text-sm text-[#BDBDBD] mb-8 leading-relaxed">
+          If you are a <strong className="text-[#999999]">New User/Customer</strong>, fill all the details
           and an account will be created for you.
         </p>
+
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-wrap md:ml-[70px] gap-5">
-          {/* <div className="md:flex md:gap-20 "> */}
-            <div className="md:w-[430px] w-[450px] ">
-              <label className="block text-[#FEB601] font-bold mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+            {/* First Name */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
                 First Name *
               </label>
               <input
                 type="text"
                 placeholder="John"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                className={inputBaseClass}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
             </div>
-            <div className="md:w-[430px] w-[450px] md:ml-20">
-              <label className="block text-[#FEB601] font-bold mb-2">
+
+            {/* Last Name */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
                 Last Name *
               </label>
               <input
                 type="text"
                 placeholder="Doe"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                className={inputBaseClass}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
               />
-          
             </div>
-            <div className="md:w-[430px] w-[450px]">
-              <label className="block text-[#FEB601] font-bold mb-2">
-                Mobile Number*
+
+            {/* Mobile Number */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
+                Mobile Number *
               </label>
               <PhoneInput
-              
                 country="US"
                 value={phoneNumber}
                 onChange={handlePhoneNumberChange}
                 required
                 placeholder="+44 12345679"
-                inputClass="custom-phone-input" // Added custom class for more control
-                containerClass="custom-phone-container" // Added container class for styling
-                
+                inputClass="custom-phone-input"
+                containerClass="custom-phone-container"
               />
             </div>
 
-            <div className="md:w-[430px] w-[450px] md:ml-20">
-              <label className="block text-[#FEB601] font-bold mb-2">
-                E-mail*
+            {/* Email */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
+                E-mail *
               </label>
               <input
                 type="email"
                 placeholder="Email@yahoo.com"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                className={inputBaseClass}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            <div className="md:w-[430px] w-[450px]">
-      <label className="block text-[#FEB601] font-bold mb-2">
-        Password*
-      </label>
-      <div className="relative">
-        <input
-          type={showPassword ? "text" : "password"} // Toggle input type based on state
-          placeholder="********"
-          className="w-full p-2 border border-[#7A7979] rounded-md"
-          value={passwordi}
-          onChange={(e) => setPasswordi(e.target.value)}
-          required
-        />
-        <button
-          type="button"
-          onClick={togglePasswordVisibility} // Toggle password visibility
-          className="absolute right-2.5 top-2.5 text-[#4b5563]"
-        >
-          {showPassword ? <VscEyeClosed className="h-6 w-6" /> : <VscEye className="w-6 h-6" />} {/* Show icon based on state */}
-        </button>
-      </div>
-    </div>
 
-    <div className="md:w-[430px] w-[450px] md:ml-20">
-      <label className="block text-[#FEB601] font-bold mb-2">
-        Confirm Password
-      </label>
-      <div className="relative">
-        <input
-          type={showPassword1 ? "pas" : "password"} // Toggle input type based on state
-          placeholder="********"
-          className="w-full p-2 border border-[#7A7979] rounded-md"
-          value={confirmPasswordi}
-          onChange={(e) => setConfirmPasswordi(e.target.value)}
-          required
-        />
-        <button
-          type="button"
-          onClick={togglePasswordVisibilityi} // Toggle password visibility for confirm field too
-          className="absolute right-2.5 top-2.5 text-[#4b5563]"
-        >
-          {showPassword1 ? <VscEyeClosed className="h-6 w-6" /> : <VscEye className="w-6 h-6" />} {/* Show icon based on state */}
-        </button>
-      </div>
-    </div>
+            {/* Password */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
+                Password *
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="********"
+                  className={inputBaseClass + " pr-12"}
+                  value={passwordi}
+                  onChange={(e) => setPasswordi(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FEB601] transition-colors duration-200 p-1 rounded-md hover:bg-gray-100"
+                >
+                  {showPassword ? (
+                    <VscEyeClosed className="h-5 w-5" />
+                  ) : (
+                    <VscEye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
 
-    {errorMessage && <p className="text-[#ef4444] -mt-5">{errorMessage}</p>}
+            {/* Confirm Password - FIXED: was type="pas", now correctly toggles "text"/"password" */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
+                Confirm Password *
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword1 ? "text" : "password"}
+                  placeholder="********"
+                  className={inputBaseClass + " pr-12"}
+                  value={confirmPasswordi}
+                  onChange={(e) => setConfirmPasswordi(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibilityi}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FEB601] transition-colors duration-200 p-1 rounded-md hover:bg-gray-100"
+                >
+                  {showPassword1 ? (
+                    <VscEyeClosed className="h-5 w-5" />
+                  ) : (
+                    <VscEye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </div>
 
-            <div className="w-[450px] md:w-[960px]">
-              <label className="block text-[#FEB601] font-bold mb-2">
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="md:col-span-2 flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <p className="text-red-600 text-sm font-medium">{errorMessage}</p>
+              </div>
+            )}
+
+            {/* Billing Address - full width */}
+            <div className="md:col-span-2">
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
                 Billing Address
               </label>
               <input
                 type="text"
                 placeholder="Billing Address"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                className={inputBaseClass}
                 value={billingAddress}
                 onChange={(e) => setBillingAddress(e.target.value)}
                 required
               />
             </div>
-            <div className="md:w-[430px] w-[450px]">
-              <label className="block text-[#FEB601] font-bold mb-2">
+
+            {/* City */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
                 City
               </label>
               <input
                 type="text"
-                placeholder="ABC"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                placeholder="London"
+                className={inputBaseClass}
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
               />
             </div>
-            <div className="md:w-[430px] w-[450px] md:ml-20 ">
-              <label className="block text-[#FEB601] font-bold mb-2">
+
+            {/* Postcode */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
                 Postcode
               </label>
               <input
                 type="text"
-                placeholder="63627"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                placeholder="SW1A 1AA"
+                className={inputBaseClass}
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value)}
                 required
               />
             </div>
-            <div className="md:w-[430px] w-[450px]">
-              <label className="block text-[#FEB601] font-bold mb-2">
+
+            {/* Country */}
+            <div>
+              <label className="block text-[#FEB601] font-semibold text-sm uppercase tracking-wider mb-2">
                 Country
               </label>
               <input
                 type="text"
-                placeholder="ABC"
-                className="w-full p-2 border border-[#7A7979] rounded-md"
+                placeholder="United Kingdom"
+                className={inputBaseClass}
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 required
               />
             </div>
           </div>
-          <div className="md:flex justify-center md:gap-20 mt-8">
+
+          {/* Registration buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-10">
             <button
               type="submit"
-              className="bg-black text-[#FEB601] p-2 text-xl rounded font-semibold flex w-[30vh] mb-3 md:w-[400px] max-w-md items-center justify-center mr-4"
+              className="bg-[#000000] text-[#FFCA09] font-semibold text-sm sm:text-base px-6 py-3 rounded-lg flex w-full sm:w-[220px] items-center justify-center gap-2 transition-all duration-200 hover:bg-[#1a1a1a] hover:shadow-lg active:scale-[0.98]"
             >
               Book A Ride
-              <img src={bookride} alt="Book a ride"  className="ml-2"/>
+              <img src={bookride} alt="Book a ride" className="ml-1 h-5 w-5 object-contain" />
             </button>
             <button
               type="submit"
-              className="bg-[#FEB601] text-black p-2 text-xl rounded font-semibold flex w-[30vh] mb-3 md:w-[400px] max-w-md items-center justify-center "
+              className="bg-[#FEB601] text-[#111111] font-semibold text-sm sm:text-base px-6 py-3 rounded-lg flex w-full sm:w-[220px] items-center justify-center gap-2 transition-all duration-200 hover:bg-[#FFCA09] hover:shadow-lg active:scale-[0.98]"
             >
               Register
-              <FaUserPlus className="ml-2 mr-2" />
+              <FaUserPlus className="text-sm" />
             </button>
           </div>
         </form>
