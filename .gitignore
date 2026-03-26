@@ -1,0 +1,25 @@
+# Dependencies
+frontend/node_modules/
+node_modules/
+
+# Build output
+frontend/build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go
+backend/tmp/
+
+# Docker
+postgres_data/
